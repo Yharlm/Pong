@@ -20,6 +20,7 @@ namespace Pong
         Texture2D ballTexture;
         Vector2 ballPosition;
         Vector2 ballVelocity;
+        
         Vector2 mousePos;
         float ballSpeed;
         bool down;
@@ -68,7 +69,7 @@ namespace Pong
                 p1.position.Y -= 4f;
             }
 
-            p2.position.Y = ballPosition.Y-p2.Scale.Y/3;
+            p2.position.Y = (ballPosition + (ballVelocity * 4)).Y;
 
 
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
@@ -80,21 +81,27 @@ namespace Pong
 
             //TODO: Изменете ballPosition.Y координатата в зависимост от стойността на булевата променлива down
             ballPosition += ballVelocity;
-            if (ballPosition.X > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2 /*|| ballPosition.X < 0*/)
+
+            
+            if (ballPosition.X > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2 || ballPosition.X < 0)
             {
                 ballVelocity.X = -ballVelocity.X;
             }
             else
-            if (p1.position.X+p1.Scale.X > ballPosition.X && p1.position.X < ballPosition.X && p1.position.Y < ballPosition.Y && p1.position.Y + p1.Scale.Y > ballPosition.Y)
+            if (p1.position.X + p1.Scale.X > ballPosition.X && p1.position.X < ballPosition.X && p1.position.Y < ballPosition.Y && p1.position.Y + p1.Scale.Y > ballPosition.Y)
             {
                 ballVelocity.X = -ballVelocity.X;
+
+                ballVelocity.Y = p1.position.Y+p1.Scale.Y/2 - ballPosition.Y;
+
+
 
             }
             if (ballPosition.Y > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2 || ballPosition.Y < 0)
             {
                 ballVelocity.Y = -ballVelocity.Y;
             }
-            if (ballPosition.X > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2 /*|| ballPosition.X < 0*/)
+            if (ballPosition.X > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2 || ballPosition.X < 0)
             {
                 ballVelocity.X = -ballVelocity.X;
             }
@@ -118,7 +125,7 @@ namespace Pong
             _spriteBatch.Begin();
             _spriteBatch.Draw(
                 ballTexture,
-                ballPosition,
+                ballPosition+Vector2.One* 0.3f,
                 null,
                 Color.White,
                 0f,
@@ -129,13 +136,17 @@ namespace Pong
             );
             _spriteBatch.End();
             _spriteBatch.Begin();
-            _spriteBatch.Draw(Content.Load<Texture2D>("dirt"), p2.position, null, Color.White, 0f, Vector2.One, p2.Scale / 20, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(Content.Load<Texture2D>("dirt"), p2.position, null, Color.White, 0f, Vector2.One, 1, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(Content.Load<Texture2D>("dirt"), p2.position, null, Color.White, 0f, Vector2.One, 1, SpriteEffects.None, 0f);
 
-            _spriteBatch.Draw(Content.Load<Texture2D>("dirt"), p1.position, null, Color.White, 0f, Vector2.One, p1.Scale/20, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(Content.Load<Texture2D>("dirt"), new Vector2(p1.position.X + p1.Scale.X, p1.position.Y), null, Color.White, 0f, Vector2.One, 0.3f, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(Content.Load<Texture2D>("dirt"), new Vector2(p1.position.X+p1.Scale.X,p1.position.Y+p1.Scale.Y), null, Color.Red, 0f, Vector2.One, 0.3f, SpriteEffects.None, 0f);
+            _spriteBatch.Draw(Content.Load<Texture2D>("dirt"), ballPosition +(ballVelocity * 10), null, Color.Red, 0f, Vector2.One, 0.5f, SpriteEffects.None, 0f);
+
             _spriteBatch.End();
 
             _spriteBatch.Begin();
-            _spriteBatch.DrawString(Content.Load<SpriteFont>("file"), ballPosition.ToString(), Vector2.Zero, Color.White);
+            _spriteBatch.DrawString(Content.Load<SpriteFont>("file"), ballPosition.ToString(), Vector2.One, Color.White);
             _spriteBatch.End();
             base.Draw(gameTime);
         }
