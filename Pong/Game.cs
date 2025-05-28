@@ -62,15 +62,25 @@ namespace Pong
 
             if(Keyboard.GetState().IsKeyDown(Keys.S))
             {
-                p1.position.Y += 4f;
+                p1.position.Y += 14f;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
-                p1.position.Y -= 4f;
+                p1.position.Y -= 14f;
             }
 
-            p2.position.Y = (ballPosition + (ballVelocity * 4)).Y;
+            
+            for (int i = 0; i < 60; i++)
+            {
+                if ((ballPosition + (ballVelocity * i)).X >= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2 - 10)
+                {
+                    p2.position.Y = ((ballPosition + (ballVelocity * i)).Y) - p2.Scale.Y / 2;
 
+                    break;
+
+                }
+
+            }
 
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
@@ -141,7 +151,17 @@ namespace Pong
 
             _spriteBatch.Draw(Content.Load<Texture2D>("dirt"), new Vector2(p1.position.X + p1.Scale.X, p1.position.Y), null, Color.White, 0f, Vector2.One, 0.3f, SpriteEffects.None, 0f);
             _spriteBatch.Draw(Content.Load<Texture2D>("dirt"), new Vector2(p1.position.X+p1.Scale.X,p1.position.Y+p1.Scale.Y), null, Color.Red, 0f, Vector2.One, 0.3f, SpriteEffects.None, 0f);
-            _spriteBatch.Draw(Content.Load<Texture2D>("dirt"), ballPosition +(ballVelocity * 10), null, Color.Red, 0f, Vector2.One, 0.5f, SpriteEffects.None, 0f);
+            for (int i = 0;i < 60;i++)
+            {
+                if((ballPosition + (ballVelocity * i)).X >= GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width/2-10)
+                {
+                    
+
+                    break;
+
+                }
+                _spriteBatch.Draw(Content.Load<Texture2D>("dirt"), ballPosition + (ballVelocity * i), null, Color.Red, 0f, Vector2.One, 0.5f, SpriteEffects.None, 0f);
+            }    
 
             _spriteBatch.End();
 
